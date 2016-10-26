@@ -10,7 +10,7 @@
 function isi_menu() {
   $items = array();
   $items['admin/config/content/isi'] = array(
-    'title' => t('ISI Configuration Page'),
+    'title' => t('ISI Configuration'),
     'description' => t('Configure and customize your isi.'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('isi_config_form'),
@@ -27,11 +27,13 @@ function isi_menu() {
  */
 function isi_block_info() {
   // This example comes from node.module.
-  $blocks['isi'] = array(
-    'info' => t('ISI Block'),
-  );
+  if (variable_get('isi_use', 0) == 1) {
+    $blocks['isi'] = array(
+      'info' => t('ISI Block'),
+    );
 
-  return $blocks;
+    return $blocks;
+  }
 }
 
 /**
@@ -42,6 +44,21 @@ function isi_block_view($delta) {
     case 'isi':
       $block['content'] = str_replace('%body_content%', variable_get('isi_body', ''), variable_get('isi_structure'));
       drupal_add_css(drupal_get_path('module', 'isi') . '/css/isi.css');
+      drupal_add_js(drupal_get_path('module', 'isi') . '/js/functionality.js');
+
+      $parameters_array = array('isi_module' => array());
+      $parameters_array['isi_module']['isi_type'] = variable_get('isi_type');
+      $parameters_array['isi_module']['isi_expand_effect'] = variable_get('isi_expand_effect');
+
+      if ($parameters_array['isi_module']['isi_expand_effect'] == 'expand_horizontal') {
+        $parameters_array['isi_module']['effect_duration'] = variable_get('expand_time');
+      }
+      else if ($parameters_array['isi_module']['isi_expand_effect'] == 'scroll_to') {
+        $parameters_array['isi_module']['effect_duration'] = variable_get('scrollto_duration');
+        $parameters_array['isi_module']['effect_selector'] = variable_get('scrollto_selector');
+      }
+
+      drupal_add_js($parameters_array, 'setting');
       break;
   }
   return $block;

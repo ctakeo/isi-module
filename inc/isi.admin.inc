@@ -178,6 +178,8 @@ function isi_config_form_submit($form, &$form_state) {
     }
 
     variable_set('isi_body', $form_state['values']['isi_body']);
+
+    variable_set('isi_expand_effect', $form_state['values']['expand_effect']);
   }
   else {
     variable_set('isi_use', FALSE);
