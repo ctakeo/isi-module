@@ -1,0 +1,48 @@
+<?php
+/**
+ * @file
+ * Module file for the isi.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function isi_menu() {
+  $items = array();
+  $items['admin/config/content/isi'] = array(
+    'title' => t('ISI Configuration Page'),
+    'description' => t('Configure and customize your isi.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('isi_config_form'),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'file' => 'inc/isi.admin.inc'
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function isi_block_info() {
+  // This example comes from node.module.
+  $blocks['isi'] = array(
+    'info' => t('ISI Block'),
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function isi_block_view($delta) {
+  switch ($delta) {
+    case 'isi':
+      $block['content'] = str_replace('%body_content%', variable_get('isi_body', ''), variable_get('isi_structure'));
+      drupal_add_css(drupal_get_path('module', 'isi') . '/css/isi.css');
+      break;
+  }
+  return $block;
+}

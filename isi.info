@@ -1,0 +1,4 @@
+name = ISI Module
+description = Creates a block for the isi and style it.
+core = 7.x
+version = 1.0
