@@ -9,28 +9,26 @@
  */
 function isi_install() {
   $structure = <<<EOF
-    <div class="block-isi">
-     <div class="container">
-       <aside class="col-sm-4 plugin-isi pull-right noPadding" role="complementary">
-        <div id="isi">
-         <header class="clearfix">
-           <a href="#open-isi" class="pull-right open-isi icons">
-             <span>
-               <i class="fa fa-plus-circle"></i>
-               <i class="fa fa-minus-circle"></i>
-             </span>
-           </a>
-           <div class="title-isi">
-             <span class="view-more"><?php print t("Important Safety Information");?></span>
-           </div>
-         </header>
-         <section class="mCustomScrollbar" style="overflow: auto" data-mcs-theme="dark-3">
-           %body_content%
-         </section>
-        </div>
-       </aside>
+<div class="block-isi">
+ <aside class="col-sm-12 plugin-isi noPadding" role="complementary">
+  <div id="isi">
+   <header class="clearfix">
+     <a href="#open-isi" class="pull-right open-isi icons">
+       <span>
+         <i class="fa fa-plus-circle"></i>
+         <i class="fa fa-minus-circle"></i>
+       </span>
+     </a>
+     <div class="title-isi">
+       <span class="view-more">Important Safety Information</span>
      </div>
-    </div>
+   </header>
+   <section class="mCustomScrollbar" style="overflow: auto" data-mcs-theme="dark-3">
+     %body_content%
+   </section>
+  </div>
+ </aside>
+</div>
 EOF;
   variable_set('isi_structure', $structure);
 }

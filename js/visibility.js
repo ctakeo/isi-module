@@ -21,16 +21,20 @@
   function bindScrollToSelector() {
     $('.form-item-scrollto-selector').hide();
     $('.form-item-scrollto-duration').hide();
+    if ($('input[name="expand_effect"]:checked').val() == 'scroll_to')
+      $('.form-item-scrollto-duration').show();
     $('input[name="expand_effect"]').change(function() {
       switch ($(this).val()) {
         case 'scroll_to':
           $('.form-item-scrollto-selector').show();
-          //$('.form-item-scrollto-duration').show();
+          $('.form-item-scrollto-duration').show();
+          $('.form-item-scrollto-fadeout').show();
           $('.form-item-expand-time').hide();
           break;
         case 'expand_horizontal':
           $('.form-item-scrollto-selector').hide();
           $('.form-item-scrollto-duration').hide();
+          $('.form-item-scrollto-fadeout').hide();
           $('.form-item-expand-time').show();
           break;
       }

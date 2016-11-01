@@ -1,0 +1,31 @@
+@height-collapsed: 30%;
+@height-expanded: 99%;
+@isi-height-mob-collapsed: 55%;
+@isi-height-mob-expanded: 87%;
+@isi-height-desk: 1200px;
+
+@mobile: ~"screen and (max-width: 767px)";
+@tablet2: ~"(min-width: 768px) and (max-width: 991px)";
+@mobile-landscape: ~"screen and (max-width: 767px) and (orientation: landscape)";
+@mobile-iframe: ~"screen and (min-width: 360px)";
+@tablet-iframe: ~"screen and (min-width: 480px)";
+@tablet: ~"screen and (min-width: 768px)";
+@tablet-only: ~"(min-width: 768px) and (max-width: 991px)";
+@tablet-portrait: ~"screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait)";
+@tablet-landscape: ~"screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape)";
+@desktop: ~"screen and (min-width: 992px)";
+@iphone5: ~"screen and (max-device-width: 568px) and (device-aspect-ratio: 40/71)";
+@tablet-2: ~"(width: 768px)";
+
+#block-isi-isi {
+  background-color: red;
+  max-width: 450px;
+  @media @desktop {
+    position: fixed;
+    margin-bottom: 0;
+    right: 50px;
+    bottom: 0;
+    width: 450px;
+    height: 75vh;
+  }
+}

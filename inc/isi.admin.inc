@@ -104,10 +104,24 @@ function isi_config_form() {
     '#title' => t('Scroll To Duration'),
     '#default_value' => variable_get('isi_scrollto_duration', '1500'),
     '#description' => t('How much time the scroll effect will take (the value is in MS). If no value is provided the default 1500 will be used.'),
+  );
+
+  $form['isi_properties']['isi_common_properties']['scrollto_fadeout'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Fadeout on arrive'),
+    '#default_value' => variable_get('isi_scrollto_fadeout', ''),
+    '#description' => t('The isi will have a fadeout effect when the scroll effect ends or when you scroll normally to the selector.'),
+  );
+
+  $form['isi_properties']['isi_common_properties']['scrollto_fadeout_duration'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Fadeout duration'),
+    '#default_value' => variable_get('isi_scrollto_fadeout_duration', '500'),
+    '#description' => t('How long will the fadeout on scroll take.'),
     '#states' => array(
       'visible' => array(
-        'input[name="scrollto_selector"]' => array('empty' => FALSE),
-      ),
+        '#edit-scrollto-fadeout' => array('checked' => TRUE),
+      )
     ),
   );
 
@@ -126,6 +140,13 @@ function isi_config_form() {
     '#default_value' => variable_get('isi_body', '<h2>Insert your ISI text here.</h2>'),
   );
 
+  $form['isi_properties']['isi_structure'] = array(
+    '#type' => 'textarea',
+    '#title' => t('ISI Structure'),
+    '#description' => t("This contains the ISI structure in case you need to change anything. The content inserted in the ISI Body will replace the 'token' %body_content%. DO NOT remove any classes or IDs"),
+    '#default_value' => variable_get('isi_structure', ''),
+  );
+
   $form['#validate'][] = 'isi_config_form_validate';
   $form['#submit'][] = 'isi_config_form_submit';
 
@@ -137,17 +158,25 @@ function isi_config_form() {
  */
 function isi_config_form_validate($form, &$form_state) {
   if ($form_state['values']['isi_activate'] == 1) {
-    if ($form_state['values']['expand_effect'] == 'scroll_to') {
-      if (strlen($form_state['values']['scrollto_selector']) == 0) {
-        form_set_error('scrollto_selector', t('This field must not be empty.'));
+    if (!strrpos($form_state['values']['isi_structure'], '%body_content%') != -1) {
+      if ($form_state['values']['expand_effect'] == 'scroll_to') {
+        if (strlen($form_state['values']['scrollto_selector']) == 0) {
+          form_set_error('scrollto_selector', t('This field must not be empty.'));
+        }
+      }
+
+      if (preg_match('/\D/', $form_state['values']['scrollto_duration'])) {
+        form_set_error('scrollto_duration', t('Please remove any letters or symbols.'));
+      }
+      if (preg_match('/\D/', $form_state['values']['expand_time'])) {
+        form_set_error('expand_time', t('Please remove any letters or symbols.'));
+      }
+      if (preg_match('/\D/', $form_state['values']['scrollto_fadeout_duration'])) {
+        form_set_error('scrollto_fadeout_duration', t('Please remove any letters or symbols.'));
       }
     }
-
-    if (preg_match('/\D/', $form_state['values']['scrollto_duration'])) {
-      form_set_error('scrollto_duration', t('Please remove any letters or symbols.'));
-    }
-    if (preg_match('/\D/', $form_state['values']['expand_time'])) {
-      form_set_error('expand_time', t('Please remove any letters or symbols.'));
+    else {
+      form_set_error('isi_structure', t('The token %body_content% was not found in the structure textarea. Did you remove it?'));
     }
   }
 }
@@ -158,6 +187,8 @@ function isi_config_form_validate($form, &$form_state) {
 function isi_config_form_submit($form, &$form_state) {
   if ($form_state['values']['isi_activate'] == 1) {
     variable_set('isi_use', TRUE);
+    variable_set('isi_structure', $form_state['values']['isi_structure']);
+
     if ($form_state['values']['expand_effect'] == 'expand_horizontal') {
       if ($form_state['values']['expand_time'] == '') {
         variable_set('isi_expand_duration', 1500);
@@ -175,10 +206,17 @@ function isi_config_form_submit($form, &$form_state) {
       else {
         variable_set('isi_scrollto_duration', $form_state['values']['scrollto_duration']);
       }
+
+      variable_set('isi_scrollto_fadeout', $form_state['values']['scrollto_fadeout']);
+      if ($form_state['values']['scrollto_fadeout_duration'] == '') {
+        variable_set('isi_scrollto_fadeout_duration', 500);
+      }
+      else {
+        variable_set('isi_scrollto_fadeout_duration', $form_state['values']['scrollto_fadeout_duration']);
+      }
     }
 
     variable_set('isi_body', $form_state['values']['isi_body']);
-
     variable_set('isi_expand_effect', $form_state['values']['expand_effect']);
   }
   else {
